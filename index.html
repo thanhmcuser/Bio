@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes bgFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            
+            background-image: url('https://cdn.discordapp.com/attachments/1343886719145213993/1557372250838270032/349ab2ad88ef3977285bcdf3568ae624.jpg?backend=b2&ex=6ac78f6f&is=6ac63def&hm=1d09d5e06b049ca6b8a8171001410ecd8274344e4c8a6b3f4dea7e17a44773e4&');
+            background-size: cover;          
+            background-position: center center; 
+            background-repeat: no-repeat;    
+            background-attachment: fixed;    
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            animation: bgFadeIn 1.2s ease-out forwards;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 1;
+            transition: background 0.4s ease;
+        }
+
+        body.light-mode::before {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        @keyframes containerFadeIn {
+            0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .container {
+            width: 92%;
+            max-width: 560px;
+            max-height: 98vh;
+            overflow-y: auto;
+            background: rgba(20, 20, 25, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            padding: 18px 20px;
+            text-align: center;
+            opacity: 0;
+            animation: containerFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            transition: background 0.4s ease, border 0.4s ease;
+        }
+
+        body.light-mode .container {
+            background: rgba(255, 255, 255, 0.38);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .container::-webkit-scrollbar { width: 4px; }
+        .container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+
+        .top-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        @keyframes clickAnim {
+            0% { transform: scale(1) rotate(0deg); }
+            30% { transform: scale(1.3) rotate(-15deg); }
+            60% { transform: scale(1.1) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            outline: none;
+            color: #fff;
+        }
+
+        body.light-mode .control-btn {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #222;
+        }
+
+        .control-btn:hover { transform: scale(1.15); }
+        .control-btn.active-anim {
+            animation: clickAnim 0.5s ease;
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.3);
+            color: #fff;
+        }
+
+        @keyframes slideInFromLeft {
+            0% { transform: translateX(-50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin: 0 auto 3px auto;
+            opacity: 0;
+            animation: slideInFromLeft 0.8s ease 0.5s forwards;
+        }
+
+        .name-box { opacity: 0; animation: slideInFromLeft 0.8s ease 0.7s forwards; }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 2px;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        body.light-mode h1 { color: #111; text-shadow: 0 1px 2px rgba(255,255,255,0.6); }
+
+        .nickname {
+            font-size: 12px;
+            color: #4dabf7;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        body.light-mode .nickname { color: #0056b3; }
+
+        .bio {
+            font-size: 11px;
+            color: #e0e0e0;
+            margin-bottom: 8px;
+            line-height: 1.35;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(4px);
+            padding: 6px 10px;
+            border-radius: 10px;
+            border-left: 3px solid #4dabf7;
+            min-height: 45px;
+            opacity: 0;
+            animation: slideInFromLeft 0.8s ease 0.9s forwards;
+        }
+        body.light-mode .bio { color: #222; background: rgba(255, 255, 255, 0.25); border-left: 3px solid #007bff; }
+
+        /* ĐÃ BỔ SUNG ANIMATION CHO PHẦN KỸ NĂNG VÀ TRƯỜNG HỌC */
+        .info-section {
+            opacity: 0;
+            animation: slideInFromLeft 0.8s ease 1.1s forwards;
+            margin-bottom: 10px;
+        }
+
+        .skills-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .skill-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .skill-tag {
+            background: rgba(255, 255, 255, 0.4);
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 123, 255, 0.4);
+            border-color: #007bff;
+            color: #fff;
+        }
+
+        .school-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        body.light-mode .school-info {
+            color: #1a1a1a;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        @keyframes fadeInUp {
+            0% { transform: translateY(15px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .links { display: flex; flex-direction: column; gap: 7px; }
+        .link-btn {
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            background: rgba(30, 30, 35, 0.35); backdrop-filter: blur(4px);
+            color: #f1f1f1; text-decoration: none; padding: 8px 14px; border-radius: 10px;
+            font-weight: 600; font-size: 12.5px; border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease; opacity: 0; pointer-events: none;
+        }
+        body.light-mode .link-btn { background: rgba(255, 255, 255, 0.3); color: #222; }
+        .link-btn.show { animation: fadeInUp 0.5s ease forwards; pointer-events: auto; }
+        .link-btn:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.2); color: #fff; }
+        
+        .link-btn.facebook:hover { border-color: #1877f2; color: #1877f2 !important; }
+        .link-btn.threads:hover { border-color: #ffffff; color: #ffffff !important; }
+        .link-btn.tiktok:hover { border-color: #fe2c55; color: #fe2c55 !important; }
+        .link-btn.spotify:hover { border-color: #1db954; color: #1db954 !important; }
+        .link-btn.youtube:hover { border-color: #ff0000; color: #ff0000 !important; }
+        .link-btn.discord:hover { border-color: #5865f2; color: #5865f2 !important; }
+        
+        footer {
+            margin-top: 8px; font-size: 11px; color: #ccc; font-weight: 600;
+            opacity: 0; pointer-events: none; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        body.light-mode footer { color: #222; }
+        footer.show { animation: fadeInUp 0.5s ease forwards; }
+    </style>
+</head>
+<body class="light-mode">
+
+    <div class="container">
+        <div class="top-controls">
+            <button class="control-btn" id="btn-theme" onclick="toggleTheme()" title="Đổi giao diện Sáng/Tối">🌙</button>
+            <button class="control-btn active-anim" id="btn-vi" onclick="changeLang('vi')" title="Tiếng Việt">🇻🇳</button>
+            <button class="control-btn" id="btn-en" onclick="changeLang('en')" title="English">🇺🇸</button>
+        </div>
+
+        <img src="https://cdn.discordapp.com/attachments/1343886719145213993/1557353689788842014/b70033be72c736eb8360fbd09c18d1bb.jpg?backend=b2&ex=6ac77e25&is=6ac62ca5&hm=19d674b1e894e36916a634c883abef28da02984143b020a06a0fc6bb85cfc0cc&" alt="Avatar" class="avatar">
+        
+        <div class="name-box">
+            <h1>Nguyễn Ngọc Gia Huy</h1>
+            <div class="nickname">(@Hoàng Zanh)</div>
+        </div>
+        
+        <div class="bio" id="bio-text"></div>
+
+        <!-- BẢNG KỸ NĂNG VÀ TRƯỜNG HỌC (ĐÃ CÓ ANIMATION XUẤT HIỆN) -->
+        <div class="info-section">
+            <div class="skills-section">
+                <span class="skill-tag">⚡ JavaScript</span>
+                <span class="skill-tag">🚀 Starter dev</span>
+            </div>
+            <div class="school-info" id="school-text">🏫 Học sinh THPT Phước Kiển</div>
+        </div>
+        
+        <div class="links" id="links-container">
+            <a href="https://www.facebook.com/share/1CmjC3hTYZ/" target="_blank" class="link-btn facebook" style="animation-delay: 0.1s;">
+                <i class="fa-brands fa-facebook"></i> <span class="txt-fb">Facebook cá nhân</span>
+            </a>
+            <a href="https://www.threads.com/@mik_bel.36kg" target="_blank" class="link-btn threads" style="animation-delay: 0.2s;">
+                <i class="fa-brands fa-threads"></i> <span class="txt-threads">Threads</span>
+            </a>
+            <a href="https://www.tiktok.com/@duongduc_anh.36?_r=1&_t=ZS-9AM4C0SdRw6" target="_blank" class="link-btn tiktok" style="animation-delay: 0.3s;">
+                <i class="fa-brands fa-tiktok"></i> <span class="txt-tiktok">TikTok cá nhân</span>
+            </a>
+            <a href="https://open.spotify.com/user/31nal3xz3kapxmr2x2ereaomdicq" target="_blank" class="link-btn spotify" style="animation-delay: 0.4s;">
+                <i class="fa-brands fa-spotify"></i> <span class="txt-spotify">Spotify Playlist</span>
+            </a>
+            <a href="https://youtube.com/@duongduc_anh.36?si=WMNTCy44I_ghfrjo" target="_blank" class="link-btn youtube" style="animation-delay: 0.5s;">
+                <i class="fa-brands fa-youtube"></i> <span class="txt-youtube">YouTube Channel</span>
+            </a>
+            <a href="#" onclick="alert(currentLang === 'vi' ? 'Discord của mình là: @duongduc_anh.36' : 'My Discord is: @duongduc_anh.36'); return false;" class="link-btn discord" style="animation-delay: 0.6s;">
+                <i class="fa-brands fa-discord"></i> <span class="txt-discord">Discord: @duongduc_anh.36</span>
+            </a>
+        </div>
+
+        <footer id="footer-elem">
+            Created with 💖 by Hoàng Zanh
+        </footer>
+    </div>
+
+    <script>
+        const texts = {
+            vi: `Chào mừng bạn đến với site về giới thiệu bản thân mình. Site này được mình code kết hợp sự hỗ trợ của AI để chỉnh sửa hoàn thiện. Mình là một developer starter nên còn yếu về code nhưng mình đang rất nỗ lực học tập mỗi ngày.\n\nDưới đây là một số trang mạng xã hội mình tham gia nhé ^^`,
+            en: `Welcome to my self-introduction site. This site was coded by me combined with AI support for final editing. I am a starter developer so my coding is still weak, but I am trying very hard to learn every day.\n\nBelow are some of the social media pages I joined ^^`
+        };
+
+        const schoolTexts = {
+            vi: "🏫 Học sinh THPT Phước Kiển",
+            en: "🏫 Phuoc Kien High School student"
+        };
+
+        const btnTexts = {
+            vi: { fb: "Facebook cá nhân", threads: "Threads", tiktok: "TikTok cá nhân", spotify: "Spotify Playlist", youtube: "YouTube Channel", discord: "Discord: @duongduc_anh.36" },
+            en: { fb: "Personal Facebook", threads: "Threads", tiktok: "Personal TikTok", spotify: "Spotify Playlist", youtube: "YouTube Channel", discord: "Discord: @duongduc_anh.36" }
+        };
+
+        let currentLang = 'vi';
+        let typingTimer = null;
+
+        function startTypeWriter(lang) {
+            const content = texts[lang];
+            let i = 0;
+            const bioElement = document.getElementById("bio-text");
+            bioElement.innerHTML = ""; 
+            
+            if (typingTimer) clearTimeout(typingTimer);
+
+            function typing() {
+                if (currentLang !== lang) return;
+                if (i < content.length) {
+                    if (content.charAt(i) === '\n') {
+                        bioElement.innerHTML += '<br>';
+                    } else {
+                        bioElement.innerHTML += content.charAt(i);
+                    }
+                    i++;
+                    typingTimer = setTimeout(typing, 20);
+                } else {
+                    const buttons = document.querySelectorAll('.link-btn');
+                    buttons.forEach(btn => btn.classList.add('show'));
+                    document.getElementById('footer-elem').classList.add('show');
+                }
+            }
+            typing();
+        }
+
+        function changeLang(lang) {
+            if (currentLang === lang) return;
+            currentLang = lang;
+            
+            document.getElementById('btn-vi').classList.remove('active-anim');
+            document.getElementById('btn-en').classList.remove('active-anim');
+            
+            const activeBtn = document.getElementById(`btn-${lang}`);
+            activeBtn.classList.add('active-anim');
+
+            document.getElementById('school-text').innerText = schoolTexts[lang];
+            document.querySelector('.txt-fb').innerText = btnTexts[lang].fb;
+            document.querySelector('.txt-threads').innerText = btnTexts[lang].threads;
+            document.querySelector('.txt-tiktok').innerText = btnTexts[lang].tiktok;
+            document.querySelector('.txt-spotify').innerText = btnTexts[lang].spotify;
+            document.querySelector('.txt-youtube').innerText = btnTexts[lang].youtube;
+            document.querySelector('.txt-discord').innerText = btnTexts[lang].discord;
+
+            startTypeWriter(lang);
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById('btn-theme');
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                themeBtn.innerHTML = '🌙';
+            } else {
+                themeBtn.innerHTML = '☀️';
+            }
+            
+            themeBtn.classList.add('active-anim');
+            setTimeout(() => themeBtn.classList.remove('active-anim'), 500);
+        }
+
+        setTimeout(() => {
+            startTypeWriter('vi');
+        }, 1200);
+    </script>
+</body>
+  </html>
+  
